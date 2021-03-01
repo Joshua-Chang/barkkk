@@ -9,9 +9,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AndroidDevChallenge">
         <activity
-            android:name=".DetailActivity"
-            android:exported="true"></activity>
-        <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
             android:theme="@style/Theme.AndroidDevChallenge.NoActionBar">

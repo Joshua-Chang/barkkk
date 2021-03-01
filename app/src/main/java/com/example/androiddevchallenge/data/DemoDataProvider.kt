@@ -244,9 +244,6 @@ object DemoDataProvider {
         )
     )
 
-    val banner = listOf(
-        Edison, Precious, Tink, Riley,
-    )
     val puppyList = listOf(
         Buster, Lucas, Gunner, Harry, Bronx, Hula, Roxy,
         Edison, Precious, Tink, Riley,

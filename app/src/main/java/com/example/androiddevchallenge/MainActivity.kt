@@ -17,27 +17,37 @@ package com.example.androiddevchallenge
 
 import android.graphics.Bitmap
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.foundation.*
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyVerticalGrid
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.Card
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.*
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.navigate
+import androidx.navigation.compose.rememberNavController
 import androidx.palette.graphics.Palette
 import com.example.androiddevchallenge.data.DemoDataProvider
 import com.example.androiddevchallenge.data.Puppy
@@ -56,26 +66,40 @@ class MainActivity : AppCompatActivity() {
     }
 }
 
+
 // Start building your app here!
 @ExperimentalFoundationApi
 @Composable
 fun MyApp() {
-    Surface(color = MaterialTheme.colors.onBackground) {
-        HomePageList()
+    val navController = rememberNavController()
+
+    NavHost(navController, startDestination = "page_home_list") {
+        composable("page_home_list") { HomePageList(navController) }
+        composable("page_puppy_detail") { DetailView(navController) }
     }
 }
 
 @ExperimentalFoundationApi
 @Composable
-fun HomePageList() {
+fun HomePageList(navController: NavHostController) {
     val list = remember { DemoDataProvider.puppyList }
-    val bannerList = remember { DemoDataProvider.banner }
-    val bannerLstState = rememberLazyListState()
-
-    LazyVerticalGrid(cells = GridCells.Fixed(2)){
+    LazyVerticalGrid(cells = GridCells.Fixed(2)) {
         items(list.size) { index ->
             val puppy = list[index]
-            GridItemView(puppy = puppy) {}
+            GridItemView(
+                puppy = puppy,
+                modifier = if (index % 2 == 0) Modifier.padding(
+                    start = 6.dp,
+                    end = 4.dp,
+                    top = 8.dp,
+                    bottom = 4.dp
+                ) else Modifier.padding(
+                    start = 4.dp, end = 6.dp, top = 8.dp,
+                    bottom = 4.dp
+                )
+            ) { puppy: Puppy ->
+                navController.navigate("page_puppy_detail")
+            }
         }
     }
 }
@@ -87,17 +111,15 @@ private fun GridItemView(
     onClick: (puppy: Puppy) -> Unit
 ) {
     val image = ImageBitmap.imageResource(puppy.images.first())
-    val bitmap = image.asAndroidBitmap()
-    val paletteColor = createPaletteSync(bitmap).getVibrantColor(0xBB86FC)
+    /*val bitmap = image.asAndroidBitmap()
+    val paletteColor = createPaletteSync(bitmap).getLightVibrantColor(0xBB86FC)*/
     Card(
         shape = MaterialTheme.shapes.medium,
-        modifier = modifier
-            .padding(4.dp)
-        ,/*elevation = 5.dp,*/
-        /*backgroundColor = (Color(paletteColor).copy(alpha = 0.2f))*/
+        modifier = modifier.shadow(6.dp),
+        /*backgroundColor = (Color(paletteColor).copy(alpha = 0.02f))*/
     ) {
         Box(modifier = Modifier.clickable { onClick.invoke(puppy) }) {
-            Row (modifier = Modifier.padding(top = 4.dp)){
+            Row(modifier = Modifier.padding(top = 4.dp)) {
                 Spacer(modifier = Modifier.weight(1f))
                 Text(
                     text = puppy.name,
@@ -108,7 +130,7 @@ private fun GridItemView(
                 Spacer(modifier = Modifier.padding(1.dp))
                 Image(
                     modifier = Modifier
-                        .size(16.dp)
+                        .size(24.dp)
                         .align(Alignment.CenterVertically),
                     colorFilter = ColorFilter.tint(puppy.gender.color),
                     imageVector = puppy.gender.label, contentDescription = null
@@ -140,7 +162,7 @@ private fun GridItemView(
                 contentScale = ContentScale.Crop,
                 contentDescription = null,
                 modifier = Modifier
-                    .padding(top = 30.dp,start = 6.dp,end = 6.dp)
+                    .padding(top = 30.dp, start = 6.dp, end = 6.dp)
                     .heightIn(max = 180.dp)
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(6.dp))
