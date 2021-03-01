@@ -248,5 +248,5 @@ object DemoDataProvider {
         Buster, Lucas, Gunner, Harry, Bronx, Hula, Roxy,
         Edison, Precious, Tink, Riley,
 
-        )
+    )
 }
