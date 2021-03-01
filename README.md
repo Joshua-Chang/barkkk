@@ -20,7 +20,7 @@ In the app，you can browse the photos and information of puppies to find your f
 <!--- What are you especially proud of? -->
 - The UI is fully built in Jetpack Compose，including multiple layouts and some complex views such as LazyVerticalGrid
 - Navigation between screens through  ViewModel/LiveData
-- There are also some use case of Animation、 State Management
+- There are also some use case of Palette、Animation、 State Management
 
 
 ## :camera_flash: Screenshots
